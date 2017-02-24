@@ -1,7 +1,18 @@
 --[[
-	Language Translation Query
+	Language Translation Script Query
 --]]
 local module = {}
+local function AddConnectionObject(url)
+	local m = {}
+	function m:QueryTranslationScript(s)
+		if type(s) == "string" then
+			local succ, d = pcall(game.HttpService:GetAsync(url .. s))
+			if succ then
+				return "ObjectThatRepresentsQueriedJSON"
+			end
+		end
+	end
+end
 function module:ConnectToServer(url)
 	if type(url) == "string" then
 		if string.sub(url, #url, #url) == "/" then
@@ -13,9 +24,9 @@ function module:ConnectToServer(url)
 		end
 	end
 	if succ then
-		return "ObjectThatRepresentsServerConnection"
+		return AddConnectionObject(url)
 	else
-		return nil
+		error("HttpService errors out.")
 	end
 end
 return module
